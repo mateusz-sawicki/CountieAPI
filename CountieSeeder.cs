@@ -13,58 +13,87 @@ namespace CountieAPI
         {
             if(_dbContext.Database.CanConnect())
             {
-                if(!_dbContext.Companies.Any())
+                if(!_dbContext.Categories.Any())
                 {
-                    var companies = GetCompanies();
-                    _dbContext.Companies.AddRange(companies);
+                    var categories = GetCategories();
+                    _dbContext.Categories.AddRange(categories);
+                    var procedures = GetProcedures();
+                    _dbContext.Procedures.AddRange(procedures);
                     _dbContext.SaveChanges();
                 }
             }
         }
-        private IEnumerable<Company> GetCompanies()
+        private IEnumerable<Procedure> GetProcedures()
         {
-            var companies = new List<Company>()
+            var procedures = new List<Procedure>()
             {
-                new Company()
+                new Procedure()
                 {
-                    Name = "Willa Dentika",
-                    ContactEmail = "willadentika@gmail.com",
-                    ContactNumber = "508336676",
-                    Procedures = new List<Procedure>()
-                    {
-                        new Procedure()
-                        {
-                            Name = "Kompleksowa diagnostyka jamy ustnej",
-                            Price = 45.00M,
-                            IsFavourite = true,
-                            Category = new Category()
-                            {
-                                Name="Stomatologia zachowawcza"
-                            }
-                        },
-                        new Procedure()
-                        {
-                            Name = "Trepanacja komory zęba",
-                            Price = 33.00M,
-                            IsFavourite = true,
-                            Category = new Category()
-                            {
-                                Name="Endodoncja"
-                            }
-                        }
-                    },
-                    Address = new Address()
-                    {
-                        City = "Elbląg",
-                        Street = "ul. Saperów 8",
-                        ZipCode = "82-300"
-                    }
-                    
-              
+                    Name = "Kompleksowa diagnostyka jamy ustnej",
+                    Price = 55.00M,
+                    IsFavourite = true,
+                    CategoryId = 1
+                },
+                new Procedure()
+                {
+                    Name = "Hemisekcja",
+                    Price = 180.00M,
+                    IsFavourite = false,
+                    CategoryId = 7
                 }
-                
             };
-            return companies;
+            return procedures;
+        }
+        private IEnumerable<Category> GetCategories()
+        {
+            var categories = new List<Category>()
+            {
+                new Category()
+                {
+                    Name = "Zachowawcza"
+                },
+                new Category()
+                {
+                    Name = "Endodoncja"
+                },
+                new Category()
+                {
+                    Name = "Badania i konsultacje"
+                },
+                new Category()
+                {
+                    Name = "RTG"
+                },
+                new Category()
+                {
+                    Name = "Dzieci"
+                },
+                new Category()
+                {
+                    Name = "Sedacja"
+                },
+                new Category()
+                {
+                    Name = "Chirurgia"
+                },
+                new Category()
+                {
+                    Name = "Protetyka"
+                },
+                new Category()
+                {
+                    Name = "Naprawy"
+                },
+                new Category()
+                {
+                    Name = "Implantoprotetyka"
+                },
+                new Category()
+                {
+                    Name = "Higienizacja"
+                }
+            };
+            return categories;
         }
     }
 }

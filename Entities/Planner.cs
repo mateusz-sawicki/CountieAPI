@@ -3,8 +3,11 @@
     public class Planner
     {
         public int Id { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime Date { get; set; }
         
-        public virtual Procedure Procedure { get; set; }
+        public int ProcedureId { get; set; }
+        public Procedure Procedure { get; set; }
+
+        public List<Procedure> Procedures { get; set; }
     }
 }

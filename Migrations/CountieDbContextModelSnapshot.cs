@@ -51,14 +51,27 @@ namespace CountieAPI.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.HasKey("Id");
+
+                    b.ToTable("Planners");
+                });
+
+            modelBuilder.Entity("CountieAPI.Entities.PlannerProcedure", b =>
+                {
+                    b.Property<int>("PlannerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProcedureId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlannerId", "ProcedureId");
 
                     b.HasIndex("ProcedureId");
 
-                    b.ToTable("Planners");
+                    b.ToTable("PlannerProcedure");
                 });
 
             modelBuilder.Entity("CountieAPI.Entities.Procedure", b =>
@@ -83,9 +96,6 @@ namespace CountieAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("PlannerId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -93,18 +103,24 @@ namespace CountieAPI.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("PlannerId");
-
                     b.ToTable("Procedures");
                 });
 
-            modelBuilder.Entity("CountieAPI.Entities.Planner", b =>
+            modelBuilder.Entity("CountieAPI.Entities.PlannerProcedure", b =>
                 {
+                    b.HasOne("CountieAPI.Entities.Planner", "Planner")
+                        .WithMany("Procedures")
+                        .HasForeignKey("PlannerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CountieAPI.Entities.Procedure", "Procedure")
-                        .WithMany()
+                        .WithMany("Planners")
                         .HasForeignKey("ProcedureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Planner");
 
                     b.Navigation("Procedure");
                 });
@@ -117,10 +133,6 @@ namespace CountieAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CountieAPI.Entities.Planner", null)
-                        .WithMany("Procedures")
-                        .HasForeignKey("PlannerId");
-
                     b.Navigation("Category");
                 });
 
@@ -132,6 +144,11 @@ namespace CountieAPI.Migrations
             modelBuilder.Entity("CountieAPI.Entities.Planner", b =>
                 {
                     b.Navigation("Procedures");
+                });
+
+            modelBuilder.Entity("CountieAPI.Entities.Procedure", b =>
+                {
+                    b.Navigation("Planners");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,8 +13,9 @@ namespace CountieAPI.Services
     public interface IPlannerService
     {
         public DateTime Create(CreatePlannerDto dto);
-        public List<ProcedureDto> GetByPlannerDate(DateTime date);
-        public IEnumerable<PlannerDto> GetAllPlanners();
+        public PlannerDto GetByDate(DateTime date);
+
+
 
     }
     public class PlannerService : IPlannerService
@@ -28,31 +29,19 @@ namespace CountieAPI.Services
             _mapper = mapper;
         }
 
-        public List<ProcedureDto> GetByPlannerDate(DateTime date)
+        public PlannerDto GetByDate(DateTime date)
         {
             var planner = _dbContext
-               .Planners
-               .Include(p => p.Procedures)
-               .FirstOrDefault(p => p.Date == date);
+                .Planners
+                .Include(p => p.Procedures)
+                .FirstOrDefault(p => p.Date.Date == date.Date);
 
             if (planner == null)
                 throw new Exception("Nie znaleziono planu");
 
-            var proceduresDtos = _mapper.Map<List<ProcedureDto>>(planner.Procedure);
-            return proceduresDtos;
+            var result = _mapper.Map<PlannerDto>(planner);
+            return result;
         }
-
-        public IEnumerable<PlannerDto> GetAllPlanners()
-        {
-            var planners = _dbContext
-                .Planners
-                .Include(p => p.Procedure)
-                .ToList();
-
-            var plannersDtos = _mapper.Map<List<PlannerDto>>(planners);
-            return plannersDtos;
-        }
-
         public DateTime Create(CreatePlannerDto dto)
         {
             var plannerEntity = _mapper.Map<Planner>(dto);
@@ -61,6 +50,7 @@ namespace CountieAPI.Services
             _dbContext.SaveChanges();
 
             return plannerEntity.Date;
+
         }
     }
 }

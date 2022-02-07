@@ -64,7 +64,9 @@ namespace CountieAPI.Services
         
         public bool Delete(int id)
         {
-            var procedure = _dbContext.Procedures.FirstOrDefault(p => p.Id == id);
+            var procedure = _dbContext
+                .Procedures
+                .FirstOrDefault(p => p.Id == id);
 
             if (procedure is null)
                 return false;

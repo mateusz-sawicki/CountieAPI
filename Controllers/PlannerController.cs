@@ -21,20 +21,6 @@ namespace CountieAPI.Controllers
             _plannerService = plannerService;
         }
 
-        /*        [HttpGet]
-                public ActionResult<IEnumerable<Planner>> GetAll()
-                {
-                    var plannersDtos = _plannerService.GetAll();
-                    return Ok(plannersDtos);
-                }*/
-
-        [HttpGet("{date}")]
-        public ActionResult<List<ProcedureDto>> GetByPlannerDate([FromRoute] DateTime date)
-        {
-            var proceduresDtos = _plannerService.GetByPlannerDate(date);
-            return Ok(proceduresDtos);
-        }
-
         [HttpPost]
         public ActionResult Create([FromBody] CreatePlannerDto dto)
         {
@@ -43,22 +29,12 @@ namespace CountieAPI.Controllers
             return Created($"app/planner/{newPlannerDate}", null);
         }
 
-        [HttpGet]
-        public ActionResult <IEnumerable<PlannerDto>> GetAllPlanners()
+        [HttpGet("{date}")]
+        public ActionResult GetByDate([FromRoute] DateTime date)
         {
-            var planners = _plannerService.GetAllPlanners();
-            return Ok(planners);
+            var plannerDto = _plannerService.GetByDate(date);
+
+            return Ok(plannerDto);
         }
-
-/*        [HttpDelete("{dateTime}")]
-        public ActionResult Delete([FromRoute] DateTime dateTime)
-        {
-            var isDeleted = _plannerService.Delete(dateTime);
-
-            if (isDeleted)
-                return NoContent();
-
-            return NotFound();
-        }*/
     }
 }

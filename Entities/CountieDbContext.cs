@@ -25,6 +25,18 @@ namespace CountieAPI.Entities
                 .Property(r => r.Name)
                 .IsRequired()
                 .HasMaxLength(25);
+
+            modelBuilder.Entity<PlannerProcedure>()
+                .HasKey(r => new {r.PlannerId, r.ProcedureId});
+
+            modelBuilder.Entity<PlannerProcedure>()
+                .HasOne<Procedure>(r => r.Procedure)
+                .WithMany(p => p.Planners);
+
+            modelBuilder.Entity<PlannerProcedure>()
+                .HasOne<Planner>(r => r.Planner)
+                .WithMany(p => p.Procedures);
+
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

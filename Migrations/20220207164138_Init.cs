@@ -23,6 +23,19 @@ namespace CountieAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Planners",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Planners", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Procedures",
                 columns: table => new
                 {
@@ -46,19 +59,24 @@ namespace CountieAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Planners",
+                name: "PlannerProcedure",
                 columns: table => new
                 {
+                    ProcedureId = table.Column<int>(type: "int", nullable: false),
+                    PlannerId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProcedureId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Planners", x => x.Id);
+                    table.PrimaryKey("PK_PlannerProcedure", x => new { x.PlannerId, x.ProcedureId });
                     table.ForeignKey(
-                        name: "FK_Planners_Procedures_ProcedureId",
+                        name: "FK_PlannerProcedure_Planners_PlannerId",
+                        column: x => x.PlannerId,
+                        principalTable: "Planners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PlannerProcedure_Procedures_ProcedureId",
                         column: x => x.ProcedureId,
                         principalTable: "Procedures",
                         principalColumn: "Id",
@@ -66,8 +84,8 @@ namespace CountieAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Planners_ProcedureId",
-                table: "Planners",
+                name: "IX_PlannerProcedure_ProcedureId",
+                table: "PlannerProcedure",
                 column: "ProcedureId");
 
             migrationBuilder.CreateIndex(
@@ -78,6 +96,9 @@ namespace CountieAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PlannerProcedure");
+
             migrationBuilder.DropTable(
                 name: "Planners");
 

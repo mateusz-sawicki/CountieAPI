@@ -20,6 +20,7 @@ builder.Services.AddScoped<CountieDbContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProcedureService, ProcedureSerive>();
 builder.Services.AddScoped<IPlannerService, PlannerService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IValidator<CreateProcedureDto>, CreateProcedureDtoValidator>();
 
 var dbContext = new CountieDbContext();
@@ -27,6 +28,8 @@ var dbContext = new CountieDbContext();
 var seeder = new CountieSeeder(dbContext);
 
 var app = builder.Build();
+
+app.UseStaticFiles();
 seeder.Seed();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

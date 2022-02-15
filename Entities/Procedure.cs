@@ -11,6 +11,6 @@
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
-        public ICollection<PlannerProcedure> Planners { get; set; }
+        public virtual ICollection<Planner> Planners { get; set; }
     }
 }

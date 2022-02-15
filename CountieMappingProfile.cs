@@ -13,21 +13,27 @@ namespace CountieAPI
     {
         public CountieMappingProfile()
         {
-            CreateMap<CreateProcedureDto, Procedure>();
+            CreateMap<CreateProcedureDto, Procedure>()
+                .ReverseMap();
 
             CreateMap<Procedure, ProcedureDto>()
                 .ForMember(m => m.CategoryId, c => c.MapFrom(s => s.Category.Id))
                 .ForMember(m => m.CategoryName, c => c.MapFrom(s => s.Category.Name))
-                .ForMember(m => m.Name, c => c.MapFrom(s => s.Name));
+                .ForMember(m => m.Name, c => c.MapFrom(s => s.Name))
+                .ReverseMap();
 
-            CreateMap<CreatePlannerDto, Planner>();
+            CreateMap<CreatePlannerDto, Planner>()
+                .ReverseMap();
 
             CreateMap<Planner, PlannerDto>()
-                .ForMember(m => m.Id, c => c.MapFrom(s => s.Id))
-                .ForMember(m => m.Date, c => c.MapFrom(s => s.Date));
+                .ForMember(m => m.DailySummary, c => c.MapFrom(s => s.Procedure.Price))
+                .ReverseMap();
 
-            CreateMap<CreateCategoryDto, Category>();
-            CreateMap<Category, CategoryDto>();
+            CreateMap<CreateCategoryDto, Category>()
+                .ReverseMap();
+
+            CreateMap<Category, CategoryDto>()
+                .ReverseMap();
         }
     }
 }

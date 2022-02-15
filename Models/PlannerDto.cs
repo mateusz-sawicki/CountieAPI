@@ -8,8 +8,11 @@ namespace CountieAPI.Models
 {
     public class PlannerDto
     {
-        public int Id { get; set; }
         public DateTime Date { get; set; }
-        public List<ProcedureDto> Procedures { get; set; }
+        public ProcedureDto Procedure { get; set; }
+        public decimal DailySummary { get; set; }
+
+        public List<ProcedureDto> ProceduresList { get; set; }
+
     }
 }

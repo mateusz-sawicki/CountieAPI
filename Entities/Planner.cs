@@ -2,10 +2,11 @@
 {
     public class Planner
     {
+        
         public int Id { get; set; }
         public DateTime Date { get; set; }
-
-        public ICollection<PlannerProcedure> Procedures { get; set; }
+        public int ProcedureId { get; set; }
+        public virtual Procedure Procedure { get; set; }
 
     }
 }

@@ -36,5 +36,18 @@ namespace CountieAPI.Controllers
 
             return Ok(plannerDto);
         }
+
+        [HttpDelete("{date}/{plannerId}")]
+        public ActionResult DeleteById([FromRoute] int plannerId)
+        {
+            _plannerService.RemoveById(plannerId);
+
+            return NoContent();
+        }
+        [HttpPut("{date}/{plannerId}")]
+        public ActionResult UpdateById([FromRoute] int plannerId, [FromBody] PlannerDto dto)
+        {
+            return Ok(dto);
+        }
     }
 }

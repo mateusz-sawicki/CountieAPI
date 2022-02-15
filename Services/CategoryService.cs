@@ -6,15 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CountieAPI.Services
 {
-    public interface ICategoryService
-    {
-        public int Create(CreateCategoryDto dto);
-        public CategoryDto GetById(int id);
-        public IEnumerable<CategoryDto> GetAll();
-        public bool Delete(int id);
-
-
-    }
     public class CategoryService : ICategoryService
     {
         private readonly IMapper _mapper;

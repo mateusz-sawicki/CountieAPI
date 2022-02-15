@@ -10,14 +10,6 @@ using System.Threading.Tasks;
 
 namespace CountieAPI.Services
 {
-    public interface IProcedureService
-    {
-        public int Create(CreateProcedureDto dto);
-        public bool Delete(int id);
-        public IEnumerable<ProcedureDto> GetAll();
-        public ProcedureDto GetById(int id);
-        public void Update(ProcedureDto dto, int id);
-    }
     public class ProcedureSerive : IProcedureService
     {
         private readonly CountieDbContext _dbContext;

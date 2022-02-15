@@ -10,12 +10,6 @@ using System.Threading.Tasks;
 
 namespace CountieAPI.Services
 {
-    public interface IPlannerService
-    {
-        public DateTime Create(CreatePlannerDto dto);
-        public PlannerDto GetByDate(DateTime date);
-        public bool RemoveById(int id);
-    }
     public class PlannerService : IPlannerService
     {
         private readonly CountieDbContext _dbContext;

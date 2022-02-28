@@ -15,22 +15,22 @@ namespace CountieAPI.Entities
             modelBuilder.Entity<Procedure>()
                 .Property(r => r.Name)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
             modelBuilder.Entity<Procedure>()
                 .Property(r => r.Price)
                 .IsRequired();
-                
+
 
             modelBuilder.Entity<Category>()
                 .Property(r => r.Name)
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(50);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString);
-            
+
         }
     }
 }

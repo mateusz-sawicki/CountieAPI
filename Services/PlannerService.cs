@@ -20,31 +20,24 @@ namespace CountieAPI.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-
-        public PlannerDto GetByDate(DateTime date)
+        public PlannersListDto GetByDate(DateTime date)
         {
             var planner = _dbContext
                 .Planners
-                .Where(p => p.Date.Date == date.Date)
                 .Include(p => p.Procedure)
-                .Include(p => p.Procedure.Category);
+                .Include(p => p.Procedure.Category)
+                .Where(p => p.Date == date);
 
             if (planner == null)
                 throw new Exception("Nie znaleziono planu");
 
-            var mappedPlanner = _mapper.Map<IList<PlannerDto>>(planner).ToList();
+            var result = _mapper.Map<IList<PlannerDto>>(planner).ToList() ;
 
-            var result = new PlannerDto { Date = date, ProceduresList = new List<ProcedureDto>() };
+            var plannerList = new PlannersListDto { Date = date, PlannersList = result };
 
-            mappedPlanner.ForEach(r => result.ProceduresList.Add(r.Procedure));
-
-            foreach (var p in mappedPlanner)
-            {
-                result.DailySummary += p.Procedure.Price;
-            }
-
-            return result;
+            return plannerList;
         }
+
 
         public DateTime Create(CreatePlannerDto dto)
         {

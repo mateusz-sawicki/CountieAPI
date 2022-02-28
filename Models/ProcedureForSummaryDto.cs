@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace CountieAPI.Models
 {
-    public class PlannerDto
+    public class ProcedureForSummaryDto
     {
-        public int PlannerId { get; set; }
         public int ProcedureId { get; set; }
         public string ProcedureName { get; set; }
         public decimal ProcedurePrice { get; set; }
-        public string CategoryName { get; set; }
-
+        public int Quantity { get; set; }
+        public decimal ProcedureSum { get; set; }
     }
 }

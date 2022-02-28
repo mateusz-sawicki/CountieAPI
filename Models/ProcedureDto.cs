@@ -11,7 +11,7 @@ namespace CountieAPI.Models
     {
         public int Id { get; set; }
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Name { get; set; }
         public string? Description { get; set; }
         [Required]

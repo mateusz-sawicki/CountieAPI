@@ -17,8 +17,6 @@ namespace CountieAPI
                 {
                     var categories = GetCategories();
                     _dbContext.Categories.AddRange(categories);
-                    var procedures = GetProcedures();
-                    _dbContext.Procedures.AddRange(procedures);
                     _dbContext.SaveChanges();
                 }
             }
@@ -33,13 +31,6 @@ namespace CountieAPI
                     Price = 55.00M,
                     IsFavourite = true,
                     CategoryId = 1
-                },
-                new Procedure()
-                {
-                    Name = "Hemisekcja",
-                    Price = 180.00M,
-                    IsFavourite = false,
-                    CategoryId = 7
                 }
             };
             return procedures;

@@ -21,6 +21,7 @@ builder.Services.AddScoped<CountieDbContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProcedureService, ProcedureSerive>();
 builder.Services.AddScoped<IPlannerService, PlannerService>();
+builder.Services.AddScoped<ISummaryService, SummaryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IValidator<CreateProcedureDto>, CreateProcedureDtoValidator>();
 builder.Services.AddCors(options =>
@@ -29,7 +30,7 @@ builder.Services.AddCors(options =>
 
     builder.AllowAnyMethod()
     .AllowAnyHeader()
-    .WithOrigins("https://localhost:7287"));
+    .WithOrigins("https://localhost:8080"));
 });
 
 var dbContext = new CountieDbContext();

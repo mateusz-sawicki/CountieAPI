@@ -26,13 +26,23 @@ namespace CountieAPI
                 .ReverseMap();
 
             CreateMap<Planner, PlannerDto>()
-                .ForMember(m => m.DailySummary, c => c.MapFrom(s => s.Procedure.Price))
+                .ForMember(m => m.PlannerId, c => c.MapFrom(s => s.Id))
+                .ForMember(m => m.ProcedureId, c => c.MapFrom(s => s.Procedure.Id))
+                .ForMember(m => m.ProcedurePrice, c => c.MapFrom(s => s.Procedure.Price))
+                .ForMember(m => m.ProcedureName, c => c.MapFrom(s => s.Procedure.Name))
+                .ForMember(m => m.CategoryName, c => c.MapFrom(s => s.Procedure.Category.Name))
                 .ReverseMap();
 
             CreateMap<CreateCategoryDto, Category>()
                 .ReverseMap();
 
             CreateMap<Category, CategoryDto>()
+                .ReverseMap();
+
+            CreateMap<Planner, ProcedureForSummaryDto>()
+                .ForMember(m => m.ProcedureId, c => c.MapFrom(s => s.Procedure.Id))
+                .ForMember(m => m.ProcedureName, c => c.MapFrom(s => s.Procedure.Name))
+                .ForMember(m => m.ProcedurePrice, c => c.MapFrom(s => s.Procedure.Price))
                 .ReverseMap();
         }
     }

@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace CountieAPI.Models
 {
-    public class PeriodSummary
+    public class PeriodSummaryDto
     {
         public DateTime Date { get; set; }
         public string Period { get; set; }
-        public decimal PeriodTotalQuantity { get; set; }
+        public int PeriodTotalQuantity { get; set; }
         public decimal PeriodTotalSum { get; set; }
+        public List<ProcedureForSummaryDto> ProcedureForSummaryList { get; set; }
     }
 }

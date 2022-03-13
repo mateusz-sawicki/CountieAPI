@@ -30,7 +30,7 @@ namespace CountieAPI.Controllers
 
             return Ok(categegory);
         }
-
+       
         [HttpGet]
         public ActionResult<IEnumerable<Category>> GetAll()
         {

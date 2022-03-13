@@ -20,16 +20,22 @@ namespace CountieAPI.Controllers
             _procedureService = procedureService;
         }
 
-        [HttpPost]
+        [HttpPut]
         public ActionResult Create([FromBody] CreateProcedureDto dto)
         {
             var newProcedureId = _procedureService.Create(dto);
-
             return Created($"katalog/{newProcedureId}", null);
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Procedure>> GetAll()
+        {
+            var proceduresDtos = _procedureService.GetAll();
+            return Ok(proceduresDtos);
+        }
+        [Route("dupa")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Procedure>> GetAall()
         {
             var proceduresDtos = _procedureService.GetAll();
             return Ok(proceduresDtos);

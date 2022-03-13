@@ -9,7 +9,7 @@ namespace CountieAPI.Models
     public class SummaryDto
     {
         public DateTime Date { get; set; }
-        public decimal DailyQuantity { get; set; }
+        public int DailyQuantity { get; set; }
         public decimal DailySum { get; set; }
         public List<ProcedureForSummaryDto> DailyProcedureSummaryList { get; set; }
     }

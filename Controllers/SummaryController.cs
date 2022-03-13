@@ -24,7 +24,6 @@ namespace CountieAPI.Controllers
         public ActionResult GetSummary([FromRoute]DateTime date)
         {
             var summary = _summaryService.GetByDate(date);
-
             return Ok(summary);
         }
 
@@ -32,7 +31,6 @@ namespace CountieAPI.Controllers
         public ActionResult GetPeriodSummary([FromRoute]DateTime date, [FromRoute]string period)
         {
             var periodSummary = _summaryService.GetPeriodSummary(date, period);
-
             return Ok(periodSummary);
         }
     }

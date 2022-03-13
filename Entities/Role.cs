@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CountieAPI.Models
+namespace CountieAPI.Entities
 {
-    public class SummaryQuery
+    public class Role
     {
-
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

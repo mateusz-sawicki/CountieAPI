@@ -4,6 +4,7 @@ using CountieAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CountieAPI.Migrations
 {
     [DbContext(typeof(CountieDbContext))]
-    partial class CountieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220309170551_PasswordHash-to-uppercase")]
+    partial class PasswordHashtouppercase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,9 +128,11 @@ namespace CountieAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -169,13 +173,13 @@ namespace CountieAPI.Migrations
 
             modelBuilder.Entity("CountieAPI.Entities.User", b =>
                 {
-                    b.HasOne("CountieAPI.Entities.Role", "Role")
+                    b.HasOne("CountieAPI.Entities.Role", "role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("role");
                 });
 
             modelBuilder.Entity("CountieAPI.Entities.Category", b =>

@@ -21,7 +21,7 @@ namespace CountieAPI.Models.Validators
                     var categoryExist = dbContext.Categories.Any(n => n.Id == value);
                     if (!categoryExist)
                     {
-                        context.AddFailure("Nie ma takiej kategorii");
+                        context.AddFailure("No category!");
                     }
                 });
         }

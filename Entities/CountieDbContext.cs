@@ -5,13 +5,26 @@ namespace CountieAPI.Entities
 {
     public class CountieDbContext : DbContext
     {
-        private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=CountieDb;Trusted_Connection=True;";
+        public CountieDbContext(DbContextOptions<CountieDbContext> options) : base(options)
+        {
+
+        }
         public DbSet<Procedure> Procedures { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Planner> Planners { get; set; }
+        public DbSet<User>  Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .Property(r => r.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .Property(r => r.Name)
+                .IsRequired();
+
             modelBuilder.Entity<Procedure>()
                 .Property(r => r.Name)
                 .IsRequired()
@@ -29,7 +42,13 @@ namespace CountieAPI.Entities
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_connectionString);
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.Development.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("CountieDbConnection");
+            optionsBuilder.UseSqlServer(connectionString);
 
         }
     }

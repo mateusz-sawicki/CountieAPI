@@ -6,9 +6,36 @@ using FluentValidation;
 using CountieAPI.Models;
 using CountieAPI.Models.Validators;
 using FluentValidation.AspNetCore;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("CountieDbConnection");
+var authenticationSettings = new AuthenticationSettings();
+
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+builder.Services.AddSingleton(authenticationSettings);
+
+builder.Services.AddAuthentication(options => 
+{ 
+    options.DefaultAuthenticateScheme = "Bearer"; 
+    options.DefaultScheme = "Bearer"; 
+    options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+    };
+});
 
 // Add services to the container.
 builder.Services.AddControllers().AddFluentValidation();
@@ -16,39 +43,44 @@ builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<CountieDbContext>();
+builder.Services.AddDbContext<CountieDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<CountieDbContext>();
+builder.Services.AddScoped<CountieSeeder>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProcedureService, ProcedureSerive>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPlannerService, PlannerService>();
 builder.Services.AddScoped<ISummaryService, SummaryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator> ();
 builder.Services.AddScoped<IValidator<CreateProcedureDto>, CreateProcedureDtoValidator>();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("FrontEndClient", builder =>
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("FrontEndClient", builder =>
 
-    builder.AllowAnyMethod()
-    .AllowAnyHeader()
-    .WithOrigins("https://localhost:8080"));
-});
+//    builder.AllowAnyMethod()
+//    .AllowAnyHeader()
+//    .WithOrigins("https://countie.pl"));
+//});
 
-var dbContext = new CountieDbContext();
-
-var seeder = new CountieSeeder(dbContext);
 
 var app = builder.Build();
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<CountieSeeder>();
 
 app.UseCors("FrontEndClient");
 app.UseStaticFiles();
 seeder.Seed();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -1,6 +1,7 @@
 ﻿using CountieAPI.Entities;
 using CountieAPI.Models;
 using CountieAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace CountieAPI.Controllers
 {
     [Route("app/planner")]
     [ApiController]
+    [Authorize]
+
     public class PlannerController : ControllerBase
     {
         private readonly IPlannerService _plannerService;

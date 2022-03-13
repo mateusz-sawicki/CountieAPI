@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace CountieAPI.Services
 {
-    public interface ISummaryService
+    public interface IAccountService
     {
-        public SummaryDto GetByDate(DateTime date);
-
-        public PeriodSummaryDto GetPeriodSummary(DateTime date, string period);
-
+        public void RegisterUser(RegisterUserDto dto);
+        public string GenerateJwt(LoginDto dto);
     }
 }

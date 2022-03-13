@@ -1,7 +1,2 @@
 # TODO CountieAPI
-- [ ] add weekly/monthly reports
-- [ ] add login with autenitication
-- [ ] add exception handling
-- [ ] add pagination
-- [ ] add search with phrase
-- [ ] change plannerDto
+https://trello.com/b/0WcvTie8/countie-api

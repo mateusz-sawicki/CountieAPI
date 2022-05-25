@@ -10,6 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using CountieAPI.Authorization;
+using Microsoft.AspNetCore.Builder;
+using CountieAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +42,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Add services to the container.
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
 builder.Services.AddControllers().AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -55,14 +60,10 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator> ();
 builder.Services.AddScoped<IValidator<CreateProcedureDto>, CreateProcedureDtoValidator>();
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("FrontEndClient", builder =>
+builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
-//    builder.AllowAnyMethod()
-//    .AllowAnyHeader()
-//    .WithOrigins("https://countie.pl"));
-//});
+builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();
@@ -72,15 +73,11 @@ var seeder = scope.ServiceProvider.GetRequiredService<CountieSeeder>();
 app.UseCors("FrontEndClient");
 app.UseStaticFiles();
 seeder.Seed();
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseAuthentication();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

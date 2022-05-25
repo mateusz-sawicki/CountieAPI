@@ -33,8 +33,9 @@ namespace CountieAPI.Services
             var newUser = new User
             {
                 Email = dto.Email,
-                DateOfBirth = dto.DateOfBirth,
                 RoleId = dto.RoleId,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
             };
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
             newUser.PasswordHash = hashedPassword;
@@ -50,14 +51,14 @@ namespace CountieAPI.Services
 
             if (user == null)
             {
-                throw new BadRequestException("Invalid username or password!");
+                InvalidCredentials();
             }
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
 
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Invalid username or password!");
+                InvalidCredentials();
             }
 
             var claims = new List<Claim>()
@@ -65,7 +66,6 @@ namespace CountieAPI.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
-                //new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
@@ -83,7 +83,9 @@ namespace CountieAPI.Services
 
             return tokenHandler.WriteToken(token);
         }
-
-
+        private void InvalidCredentials()
+        {
+            throw new BadRequestException("Invalid username or password!");
+        }
     }
 }

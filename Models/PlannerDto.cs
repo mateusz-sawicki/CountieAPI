@@ -13,6 +13,8 @@ namespace CountieAPI.Models
         public string ProcedureName { get; set; }
         public decimal ProcedurePrice { get; set; }
         public string CategoryName { get; set; }
+        public int? CreatedById { get; set; }
+
 
     }
 }

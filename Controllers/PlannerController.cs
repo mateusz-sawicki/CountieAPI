@@ -1,20 +1,14 @@
-﻿using CountieAPI.Entities;
-using CountieAPI.Models;
+﻿using CountieAPI.Models;
 using CountieAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace CountieAPI.Controllers
 {
     [Route("app/planner")]
     [ApiController]
     [Authorize]
-
     public class PlannerController : ControllerBase
     {
         private readonly IPlannerService _plannerService;
@@ -27,6 +21,7 @@ namespace CountieAPI.Controllers
         [HttpPost]
         public ActionResult Create([FromBody] CreatePlannerDto dto)
         {
+            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var newPlannerDate = _plannerService.Create(dto);
 
             return Created($"app/planner/{newPlannerDate}", null);
@@ -35,7 +30,9 @@ namespace CountieAPI.Controllers
         [HttpGet("{date}")]
         public ActionResult GetByDate([FromRoute] DateTime date)
         {
-            var plannerDto = _plannerService.GetByDate(date);
+            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            var plannerDto = _plannerService.GetByDate(date, userId);
 
             return Ok(plannerDto);
         }

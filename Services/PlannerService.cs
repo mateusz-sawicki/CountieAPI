@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
+using CountieAPI.Authorization;
 using CountieAPI.Entities;
+using CountieAPI.Exceptions;
 using CountieAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CountieAPI.Services
 {
@@ -14,19 +12,24 @@ namespace CountieAPI.Services
     {
         private readonly CountieDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
 
-        public PlannerService(CountieDbContext dbContext, IMapper mapper)
+        public PlannerService(CountieDbContext dbContext, IMapper mapper, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _authorizationService = authorizationService;
+            _userContextService = userContextService;
         }
-        public PlannersListDto GetByDate(DateTime date)
+        public PlannersListDto GetByDate(DateTime date, int userId)
         {
             var planner = _dbContext
                 .Planners
                 .Include(p => p.Procedure)
                 .Include(p => p.Procedure.Category)
-                .Where(p => p.Date == date);
+                .Where(p => p.Date == date)
+                .Where(p => p.CreatedById == userId);
 
             if (planner == null)
                 throw new Exception("Nie znaleziono planu");
@@ -42,7 +45,7 @@ namespace CountieAPI.Services
         public DateTime Create(CreatePlannerDto dto)
         {
             var plannerEntity = _mapper.Map<Planner>(dto);
-
+            plannerEntity.CreatedById = _userContextService.GetUserId;
             _dbContext.Planners.Add(plannerEntity);
             _dbContext.SaveChanges();
 
@@ -58,6 +61,12 @@ namespace CountieAPI.Services
             if (planner == null)
                 throw new Exception("Nie znaleziono planu");
 
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, planner, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             _dbContext.Planners.Remove(planner);
             _dbContext.SaveChanges();

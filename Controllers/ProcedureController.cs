@@ -33,13 +33,6 @@ namespace CountieAPI.Controllers
             var proceduresDtos = _procedureService.GetAll();
             return Ok(proceduresDtos);
         }
-        [Route("dupa")]
-        [HttpGet]
-        public ActionResult<IEnumerable<Procedure>> GetAall()
-        {
-            var proceduresDtos = _procedureService.GetAll();
-            return Ok(proceduresDtos);
-        }
 
         [HttpGet("{id}")]
         public ActionResult<Procedure> GetById([FromRoute] int id)

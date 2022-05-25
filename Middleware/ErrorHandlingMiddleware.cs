@@ -1,9 +1,4 @@
 ﻿using CountieAPI.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CountieAPI.Middleware
 {
@@ -25,6 +20,10 @@ namespace CountieAPI.Middleware
             {
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(badRequestException.Message);
+            }
+            catch (ForbidException forbidException)
+            {
+                context.Response.StatusCode = 403;
             }
         }
     }
